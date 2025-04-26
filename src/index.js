@@ -16,7 +16,7 @@ app.use("/api", apiRouter);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // frontend URL in production
+    origin: "*", 
     methods: ["GET", "POST"],
   },
 });
@@ -25,7 +25,6 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("Hello, World! back2u");
 });
-
 
 const onlineUsers = new Map();
 
@@ -39,18 +38,20 @@ io.on("connection", (socket) => {
   });
 
   // Handle sending a message
-  socket.on("sendMessage", ({ chatRoomId, senderId, receiverId, content }) => {
-    
-    const receiverSocketId = onlineUsers.get(receiverId);
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("receiveMessage", {
-        chatRoomId,
-        senderId,
+  socket.on(
+    "sendMessage",
+    async ({ chatRoomId, senderId, receiverId, content }) => {
+      const newMessage = await Message.create({
+        chatRoom: chatRoomId,
+        sender: senderId,
         content,
-        timestamp: new Date(),
       });
+      const receiverSocketId = onlineUsers.get(receiverId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("receiveMessage", newMessage);
+      }
     }
-  });
+  );
 
   socket.on("disconnect", () => {
     console.log("User disconnected: ", socket.id);
