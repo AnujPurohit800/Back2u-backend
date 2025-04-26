@@ -9,7 +9,8 @@ const postRepository = {
     const posts = await Post.find()
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .populate("postedBy", "name email avatar");
     return posts;
   },
   getPostCount: async function () {
