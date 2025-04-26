@@ -4,6 +4,8 @@ import {
   deletePostController,
   getPaginatedPostsController,
   getPostByIdController,
+  getPostsByTypeController,
+  updatePostController,
 } from "../controllers/postController.js";
 import { uploader } from "../config/multerConfig.js";
 import { isAuthenticated } from "../middleware/authMiddleware.js";
@@ -23,6 +25,14 @@ router.get(`/:id`, getPostByIdController);
 
 router.delete("/:id", isAuthenticated, deletePostController);
 
+router.put(
+  "/:id",
+  isAuthenticated,
+  uploader.single("image"),
+  updatePostController
+);
+
+router.get("/type/:type", getPostsByTypeController);
 
 
 export default router;

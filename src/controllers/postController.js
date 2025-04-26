@@ -4,6 +4,8 @@ import {
   deletePostService,
   getPaginatedPostsService,
   getPostByIdService,
+  getPostsByTypeService,
+  updatePostService,
 } from "../services/postServices.js";
 
 export async function createPostController(req, res) {
@@ -110,6 +112,56 @@ export async function deletePostController(req, res) {
     });
   } catch (error) {
     console.log("Delete post controller error", error);
+    if (error.status) {
+      return res.status(error.status).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
+export async function updatePostController(req, res) {
+  try {
+    const postId = req.params.id;
+    const userId = req.user;
+    const data = req.body;
+    const updatedPost = await updatePostService(postId, userId, data);
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Post updated successfully",
+      data: updatedPost,
+    });
+  } catch (error) {
+    console.log("Update post controller error", error);
+    if (error.status) {
+      return res.status(error.status).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
+export async function getPostsByTypeController(req, res) {
+  try {
+    const { type } = req.params;
+    const posts = await getPostsByTypeService(type);
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Posts fetched successfully",
+      data: posts,
+    });
+  } catch (error) {
+    console.log("Get posts by type controller error", error);
     if (error.status) {
       return res.status(error.status).json({
         success: false,

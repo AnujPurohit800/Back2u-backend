@@ -46,13 +46,43 @@ export const deletePostService = async (id, userId) => {
     if (post.postedBy.toString() !== userId) {
       throw { status: StatusCodes.UNAUTHORIZED, message: "Unauthorized" };
     }
-    const deletedPost=await postRepository.delete(id);
+    const deletedPost = await postRepository.delete(id);
     if (!deletedPost) {
-      throw { status: StatusCodes.INTERNAL_SERVER_ERROR, message: "Failed to delete post" };
+      throw {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: "Failed to delete post",
+      };
     }
     return deletedPost;
   } catch (error) {
     console.log("Delete post service error", error);
+    throw error;
+  }
+};
+
+export const updatePostService = async (id, userId, data) => {
+  try {
+    const response = await postRepository.update(id, data);
+    const post = await postRepository.getById(id);
+    if (!post) {
+      throw { status: StatusCodes.NOT_FOUND, message: "Post not found" };
+    }
+    if (post.postedBy.toString() !== userId) {
+      throw { status: StatusCodes.UNAUTHORIZED, message: "Unauthorized" };
+    }
+    return response;
+  } catch (error) {
+    console.log("Update post service error", error);
+    throw error;
+  }
+};
+
+export const getPostsByTypeService = async (type) => {
+  try {
+    const posts = await postRepository.getPostsByType(type);
+    return posts;
+  } catch (error) {
+    console.log("Get posts by type service error", error);
     throw error;
   }
 };

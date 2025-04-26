@@ -20,6 +20,10 @@ const postRepository = {
     const post = await Post.findById(id).populate("postedBy", "name email");
     return post;
   },
+  getPostsByType: async function (type) {
+    const post = await Post.find({ type }).populate("postedBy", "name email");
+    return post;
+  },
 };
 
 export default postRepository;

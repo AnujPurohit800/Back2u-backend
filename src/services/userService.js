@@ -57,3 +57,19 @@ export const signInService = async (userDetail) => {
     throw error;
   }
 };
+
+export const getUserByIdService = async (id) => {
+  try {
+    const user = await userRepository.getById(id);
+    if (!user) {
+      throw {
+        status: StatusCodes.NOT_FOUND,
+        message: "User not found",
+      };
+    }
+    return user;
+  } catch (error) {
+    console.log("Get user by ID service error", error);
+    throw error;
+  }
+};
