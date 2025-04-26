@@ -44,7 +44,7 @@ userSchema.pre("save", function saveUser(next) {
   const SALT = bcrypt.genSaltSync(saltRounds);
   const hashPassword = bcrypt.hashSync(user.password, SALT);
   user.password = hashPassword;
-  user.avatar = `https://robohash.org/${user.username}`;
+  user.avatar = `https://robohash.org/${user.name}`;
   next();
 });
 
