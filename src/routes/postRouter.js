@@ -5,6 +5,7 @@ import {
   getPaginatedPostsController,
   getPostByIdController,
   getPostsByTypeController,
+  getPostsByUserIdController,
   updatePostController,
 } from "../controllers/postController.js";
 import { uploader } from "../config/multerConfig.js";
@@ -34,5 +35,6 @@ router.put(
 
 router.get("/type/:type", getPostsByTypeController);
 
+router.get("/user/:userId", isAuthenticated, getPostsByUserIdController);
 
 export default router;

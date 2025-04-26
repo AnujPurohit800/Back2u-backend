@@ -86,3 +86,13 @@ export const getPostsByTypeService = async (type) => {
     throw error;
   }
 };
+
+export const getPostsByUserIdService = async (userId) => {
+  try {
+    const posts = await postRepository.getPostsByUserId(userId);
+    return posts;
+  } catch (error) {
+    console.log("Get posts by user ID service error", error);
+    throw error;
+  }
+};

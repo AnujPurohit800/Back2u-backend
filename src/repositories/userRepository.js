@@ -8,7 +8,7 @@ const userRepository = {
     return user;
   },
   getByStudentId: async function (studentId) {
-    const user = await User.findOne({ studentId });
+    const user = await User.findOne({ studentId }).populate("studentId", "name email");
     return user;
   },
 };
